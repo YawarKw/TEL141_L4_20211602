@@ -79,6 +79,8 @@ Configuración de acceso y dependencias :
 bash DEV/comun/configurar_ssh.sh
 bash DEV/actividad_4/actividad4.sh deps
 ```
+Cabe resaltar que actividad4.sh deps solo instala las dependencias compartidas para las 4 actividades; no despliega la actividad 4.
+
 
 Se reutiliza la clave `~/.ssh/id_ed25519_tel141_s4` de la primera entrega. Si todavía no existe, se genera una clave dedicada sin frase de paso. La instalación inicial puede solicitar la contraseña de `ubuntu` en cada nodo y confirmar su huella SSH. La guía indica `ubuntu` como contraseña inicial, si no fue cambiada. La clave privada permanece en server4.
 
