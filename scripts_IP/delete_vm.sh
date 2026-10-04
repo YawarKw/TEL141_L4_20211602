@@ -13,10 +13,14 @@ TAP=${META[3]}; if_ok "$TAP"
 stop_owned "$DIR/qemu.pid" qemu-system-x86_64 "file=$DIR/disk.qcow2,format=qcow2,if=virtio"
 ovs-vsctl --if-exists del-port "$OVS" "$TAP"
 if ip link show "$TAP" &>/dev/null; then ip tuntap del dev "$TAP" mode tap; fi
-rm -f -- "$DIR/disk.qcow2" "$DIR/metadata" "$DIR/qemu.pid"
+rm -f -- "$DIR/disk.qcow2" "$DIR/metadata" "$DIR/qemu.pid" "$DIR/serial.sock"
 rmdir -- "$DIR"
-# Todas las VMs gestionadas usan esta base privada; no se comparte fuera de STATE.
-if [[ -z $(find "$STATE/vms" -type f -name '*.qcow2' -print -quit) ]]; then
+# Los discos archivados durante la limpieza tambien pueden depender de esta base.
+ARCHIVED=''
+if [[ -d /var/lib/tel141-a1-backups ]]; then
+    ARCHIVED=$(find /var/lib/tel141-a1-backups -type f -name '*.qcow2' -print -quit)
+fi
+if [[ -z $ARCHIVED && -z $(find "$STATE/vms" -type f -name '*.qcow2' -print -quit) ]]; then
     rm -f -- "$BASE"
     printf 'Imagen base privada eliminada: no quedan discos delta.\n'
 fi
