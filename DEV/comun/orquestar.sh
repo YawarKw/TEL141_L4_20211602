@@ -5,8 +5,8 @@ set -euo pipefail
 HERE=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$HERE/../.." && pwd)
 source "$HERE/config.sh"
-ACTIVITY_ID=${1:?Indique actividad 1, 2 o 3}; shift
-[[ $ACTIVITY_ID =~ ^[123]$ ]] || exit 2
+ACTIVITY_ID=${1:?Indique actividad 1, 2, 3 o 4}; shift
+[[ $ACTIVITY_ID =~ ^[1234]$ ]] || exit 2
 ACTDIR="$ROOT/DEV/actividad_$ACTIVITY_ID"
 MODE=${1:-plan}
 case "$MODE" in plan|deps|deploy|verify|clean) ;; *) echo 'Uso: orquestar.sh ACTIVIDAD plan|deps|deploy|verify|clean' >&2; exit 2;; esac
@@ -89,11 +89,13 @@ if [[ $MODE == deploy ]]; then
 fi
 remote server3 verify
 for ROLE in server1 server2 ofs; do remote "$ROLE" verify; done
+if [[ $ACTIVITY_ID == 4 ]]; then remote server3 routing_evidence; fi
 FINISHED=1
 case "$ACTIVITY_ID" in
   1) RESULT='DHCP, Internet y DNS, VLAN aisladas' ;;
   2) RESULT='IP estaticas, sin DHCP, Internet y DNS, VLAN aisladas' ;;
   3) RESULT='DHCP, Internet bloqueado para los clientes, VLAN aisladas' ;;
+  4) RESULT='VLAN100 estatica, VLAN200 DHCP; enrutamiento bidireccional; Internet bloqueado' ;;
 esac
 printf 'PASS: actividad %s; 4 clientes verificados; %s.\n' "$ACTIVITY_ID" "$RESULT" | tee "$EVIDENCE/resultado.txt"
 echo "Evidencias guardadas en $EVIDENCE"
