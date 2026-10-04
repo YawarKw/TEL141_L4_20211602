@@ -33,10 +33,18 @@ ip link set "$TAP" up
 MACHINE_ID=$(cat /etc/machine-id)
 MAC_HASH=$(printf '%s:%s' "$MACHINE_ID" "$VM" | sha256sum)
 MAC="02:${MAC_HASH:0:2}:${MAC_HASH:2:2}:${MAC_HASH:4:2}:${MAC_HASH:6:2}:${MAC_HASH:8:2}"
+if [[ -n ${TEL141_MAC:-} ]]; then
+    [[ $TEL141_MAC =~ ^02(:[0-9a-fA-F]{2}){5}$ ]] || die 'MAC local invalida.'
+    MAC=$TEL141_MAC
+fi
+SERIAL_ARGS=(-serial none)
+if [[ ${TEL141_SERIAL:-0} == 1 ]]; then
+    SERIAL_ARGS=(-serial "unix:$DIR/serial.sock,server,nowait")
+fi
 qemu-system-x86_64 -name "$VM" -enable-kvm -m 512 -smp 1 \
     -drive "file=$DIR/disk.qcow2,format=qcow2,if=virtio" \
     -netdev "tap,id=net0,ifname=$TAP,script=no,downscript=no" \
     -device "e1000,netdev=net0,mac=$MAC" \
-    -vnc "127.0.0.1:$DISPLAY_NUM" -monitor none -serial none \
-    -daemonize -pidfile "$DIR/qemu.pid" 9>&-
+    -vnc "127.0.0.1:$DISPLAY_NUM" -monitor none "${SERIAL_ARGS[@]}" \
+    -daemonize -pidfile "$DIR/qemu.pid" 9>&- 8>&-
 printf 'VM %s: TAP %s, VLAN %s, VNC local 127.0.0.1:%s (display :%s).\n' "$VM" "$TAP" "$ID" "$PORT" "$DISPLAY_NUM"
