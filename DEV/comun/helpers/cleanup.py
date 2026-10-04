@@ -19,9 +19,9 @@ OVS_BRIDGES = {'br-int', 'ovs1', 'ovs-br1', 'ovs-br2'}
 LINUX_BRIDGES = {'br1', 'br-lab1', 'br-lab2'}
 NAMESPACES = {'ns-dhcp-server', 'ns1', 'ns2', 'ns-dhcp-vlan100',
               'ns-dhcp-vlan200', 'ns-dhcp-100', 'ns-dhcp-200'}
-CONTAINERS = {'container_vlan100', 'container_vlan200'} | {f'a{a}-cont{v}' for a in (1,2,3) for v in (100,200)}
+CONTAINERS = {'container_vlan100', 'container_vlan200'} | {f'a{a}-cont{v}' for a in (1,2,3,4) for v in (100,200)}
 VM_NAMES = {'vm1', 'vm2', 'vm100', 'vm200', 'vm_vlan100', 'vm_vlan200',
-            'cirros-lab'} | {f'a{a}-vm{v}' for a in (1,2,3) for v in (100,200)}
+            'cirros-lab'} | {f'a{a}-vm{v}' for a in (1,2,3,4) for v in (100,200)}
 DISKS = {'vm1_imagen.qcow2', 'vm2_imagen.qcow2', 'vm_vlan100_img.qcow2',
          'vm_vlan200_img.qcow2'}
 CHAINS = {'TEL141_A1', 'TEL141_A1_IN', 'TEL141_RF', 'TEL141_RF_IN'}
@@ -42,7 +42,7 @@ def legacy_interface(name):
                     'veth-br1', 'veth-br2', 'patch-br1', 'patch-br2',
                     'br1-eth0', 'br1-eth1', 'br1-eth2', 'srv-eth0', 'ns1-eth0', 'ns2-eth0'} or bool(
         re.fullmatch(r'(vlan|gw_vlan|dhcp_v)(100|200)|dh(100|200)[hn]|'
-                     r'ovs1-tap[012]|vm_vlan(100|200)_tap|a[123]c(100|200)[hn]', name))
+                     r'ovs1-tap[012]|vm_vlan(100|200)_tap|a[1234]c(100|200)[hn]', name))
 
 def process_info(pid):
     try:
@@ -209,7 +209,7 @@ def inventory(role):
                 inside=read_json('nsenter','-t',str(pid),'-n','ip','-j','link')
                 host_indices={link_details[p]['ifindex'] for p in candidates if p in link_details}
                 tied=any(x.get('link_index') in host_indices for x in inside)
-            if name in CONTAINERS or tied or (obj['Config'].get('Labels') or {}).get('tel141.activity') in {'1','2','3'}:
+            if name in CONTAINERS or tied or (obj['Config'].get('Labels') or {}).get('tel141.activity') in {'1','2','3','4'}:
                 if mode=='host': errors.append(f'Contenedor {name} utiliza la red host; no se eliminara automaticamente.')
                 containers.append({'id':obj['Id'],'name':name})
     fw=run('iptables-save').stdout
