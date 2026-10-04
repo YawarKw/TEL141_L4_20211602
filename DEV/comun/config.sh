@@ -12,4 +12,4 @@ declare -A HOSTS=(
 # Se comprueba hostname antes de modificar cualquier nodo.
 DOCKER_IMAGE=alpine:3.22
 INTERNET_TEST_IP=8.8.8.8
-DNS_TEST_NAME=example.com
+DNS_TEST_NAME=google.com
