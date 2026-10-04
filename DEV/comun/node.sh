@@ -35,7 +35,13 @@ case "$ACTION" in
     apt-get install -y python3 iproute2 iptables util-linux openvswitch-switch curl iputils-ping
     systemctl enable --now openvswitch-switch
     case "$ROLE" in
-      server1) apt-get install -y docker.io; systemctl enable --now docker ;;
+      server1)
+        if ! command -v docker >/dev/null 2>&1; then
+          apt-get install -y docker.io
+        fi
+        systemctl enable --now docker
+        docker info >/dev/null
+        ;;
       server2) apt-get install -y qemu-system-x86 qemu-utils ;;
       server3) apt-get install -y dnsmasq-base ;;
     esac

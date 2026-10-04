@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """RF1-4: A3 sin trafico encaminado; A4 permite solo enrutamiento entre VLANs."""
 import argparse
+import ipaddress
 import shlex
 import subprocess
 
@@ -18,7 +19,19 @@ def rules(activity):
     else:
         forwarding=[['-i','vlan100','-o','vlan200','-j','DROP'],
                     ['-i','vlan200','-o','vlan100','-j','DROP']]
+    # Evitar esperas largas de CirrOS por metadatos no disponibles.
+    # Rechazar esta conexión no concede acceso a Internet.
+    metadata = [
+        ['-i', 'vlan100', '-d', '169.254.169.254',
+         '-p', 'tcp', '-m', 'tcp', '--dport', '80',
+         '-j', 'REJECT', '--reject-with', 'tcp-reset'],
+        ['-i', 'vlan200', '-d', '169.254.169.254',
+         '-p', 'tcp', '-m', 'tcp', '--dport', '80',
+         '-j', 'REJECT', '--reject-with', 'tcp-reset']
+    ]
+    forwarding = metadata + forwarding
     local=[]
+
     for vlan,net,other in [(100,'192.168.0.0/24','192.168.2.0/24'),
                            (200,'192.168.2.0/24','192.168.0.0/24')]:
         interface=f'vlan{vlan}'
@@ -34,11 +47,18 @@ def rules(activity):
 def cmd(*args):return subprocess.check_output(['iptables','-w',*args],text=True).strip()
 
 def normalized(tokens):
-    # iptables puede ordenar los estados al imprimir: comparar el conjunto.
-    tokens=list(tokens)
-    if '--ctstate' in tokens:
-        i=tokens.index('--ctstate')+1;tokens[i]=','.join(sorted(tokens[i].split(',')))
-    return tokens
+    tokens = list(tokens)
+    if len(tokens) % 2:
+        raise RuntimeError('Formato de regla no reconocido: ' + repr(tokens))
+    opciones = []
+    for i in range(0, len(tokens), 2):
+        opcion, valor = tokens[i:i+2]
+        if opcion == '--ctstate':
+            valor = ','.join(sorted(valor.split(',')))
+        elif opcion in ('-s', '-d'):
+            valor = str(ipaddress.ip_network(valor, strict=False))
+        opciones.append((opcion, valor))
+    return sorted(opciones)
 
 def apply(activity):
     for chain,entries in rules(activity).items():

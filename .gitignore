@@ -1,0 +1,9 @@
+
+# Archivos locales del laboratorio
+.orquestacion.lock
+__pycache__/
+*.pyc
+evidencias/
+*.qcow2
+*.img
+id_ed25519*

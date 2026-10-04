@@ -4,12 +4,13 @@ import json
 from pathlib import Path
 import subprocess
 
-def cmd(*a):return subprocess.check_output(a,text=True).strip()
+def cmd(*a):return subprocess.check_output(a,universal_newlines=True).strip()
 try:
     assert cmd('hostname','-s').lower()=='ofs', 'El destino no es OFS.'
     addrs=json.loads(cmd('ip','-j','-4','addr','show','dev','ens3'))
-    assert any(a['local']=='10.0.10.5' for x in addrs for a in x['addr_info']), 'IP de gestion OFS inesperada.'
-    assert json.loads(cmd('ip','-j','route','get','10.0.10.4'))[0]['dev']=='ens3', 'Gestion OFS no usa ens3.'
+    assert any(a.get('local')=='10.0.10.5' for x in addrs for a in x.get('addr_info', [])), 'IP de gestion OFS inesperada.'
+    route = cmd('ip','-4','route','get','10.0.10.4').split()
+    assert any(route[i]=='dev' and route[i+1]=='ens3' for i in range(len(route)-1)), 'Gestion OFS no usa ens3.'
     physical={p.name for p in Path('/sys/class/net').iterdir() if (p/'device').exists()}-{'ens3'}
     assert len(physical)>=3, 'No se detectaron al menos tres puertos fisicos de datos.'
     bridge_names={cmd('ovs-vsctl','iface-to-br',p) for p in physical}
