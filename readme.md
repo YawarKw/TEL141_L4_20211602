@@ -2,153 +2,259 @@
 
 Edgar Diaz Zevillanos / 20211602. 
 
-Implementación en Bash de los nueve scripts de la actividad 2. `scripts/common.sh` es una biblioteca compartida y debe permanecer junto a los nueve scripts. Los scripts se ejecutan en los servidores Linux del laboratorio, con `sudo`.
-
+Implementación en Bash de los nueve scripts de la actividad 2 del informe previo, y las 4 actividades del reporte final. `scripts/common.sh` es una biblioteca compartida que permanece junto a los nueve scripts. 
 A continuación una guía para el uso de estos scripts:
 
-## Preparación
+## Escenarios
 
-En Ubuntu/Debian, en cada servidor que corresponda:
+| Actividad | Direcciones de los clientes | DHCP | Internet de los clientes | Comunicación entre VLANs |
+|---|---|---|---|---|
+| 1 | Reservas entregadas por DHCP | Sí | Sí | Bloqueada |
+| 2 | Configuración estática | No | Sí | Bloqueada |
+| 3 | Reservas entregadas por DHCP | Sí | Bloqueado | Bloqueada |
+| 4 | VLAN 100 estática; VLAN 200 por DHCP | Solo VLAN 200 | Bloqueado | Permitida en ambos sentidos |
 
-```bash
-sudo apt update
-sudo apt install -y openvswitch-switch iproute2 iptables dnsmasq-base \
-  qemu-system-x86 qemu-utils curl util-linux openssh-client openssh-server
-sudo systemctl enable --now openvswitch-switch
-sudo systemctl enable --now ssh
-cd TEL141_L4_20211602/scripts
-chmod +x *.sh
-ip -br address
-ip -4 route
-sudo ovs-vsctl show
-sudo iptables -S FORWARD
-```
+**Solo una actividad queda desplegada a la vez.** Cada `deploy` limpia los recursos identificados de la actividad anterior y recrea el escenario solicitado. Guarda las evidencias de cada actividad antes de ejecutar la siguiente.
 
-Identifique antes el master, los workers, la interfaz de gestión, la salida a Internet y los enlaces de datos. `ens4` y `ens3` en los ejemplos son nombres ilustrativos y deben coincidir con la topología real. Use interfaces de datos sin direcciones IP globales. `init_master.sh` cambia la política FORWARD a DROP y puede interrumpir tráfico reenviado existente: ejecútelo en el nodo destinado al laboratorio.
+## Topología y direcciones
 
-Se presupone un entorno de laboratorio sin reglas ajenas que permitan o bloqueen estos flujos, enlaces entre OVS capaces de transportar 802.1Q y ausencia de un controlador OpenFlow que sustituya el switching normal de OVS. Las reglas existentes no se borran. Con UFW, Docker, libvirt u otro gestor, revise previamente sus cadenas: una regla ACCEPT ajena puede mantener un acceso que estos scripts retiren.
+| Nodo | Gestión | Función |
+|---|---|---|
+| server4 | 10.0.10.4 | Orquestador SSH |
+| server1 | 10.0.10.1 | OVS `br-int` y dos contenedores mediante veth |
+| server2 | 10.0.10.2 | OVS `br-int` y dos VMs CirrOS mediante TAP |
+| server3 | 10.0.10.3 | Gateways, firewall, DHCP cuando corresponde y NAT cuando corresponde |
+| ofs | 10.0.10.5 | Switch existente: se inspecciona, no se reconfigura |
 
-## Parámetros
+En server1–3, `ens3` corresponde a gestión/salida y `ens4` a datos hacia OFS. La orquestación usa puerto SSH **22** entre nodos. Los puertos 5801–5805 corresponden al acceso desde tu PC mediante el gateway.
 
-| Script | Argumentos |
+| VLAN | Red | Gateway | Contenedor en server1 | VM en server2 | DHCP en server3, cuando aplica |
+|---|---|---|---|---|---|
+| 100 | 192.168.0.0/24 | 192.168.0.1 | 192.168.0.11 | 192.168.0.12 | 192.168.0.2 |
+| 200 | 192.168.2.0/24 | 192.168.2.1 | 192.168.2.11 | 192.168.2.12 | 192.168.2.2 |
+
+En las actividades 1 y 3, `.11` y `.12` son reservas DHCP por MAC dentro del rango `.11`–`.15`. En la actividad 2 esas mismas direcciones se asignan estáticamente. En la actividad 4, VLAN 100 usa configuración estática y VLAN 200 usa las reservas DHCP. Los gateways usan puertos internos OVS `vlan100` y `vlan200`, equivalentes funcionales a `gw_vlan100` y `gw_vlan200` del dibujo.
+
+Los nombres llevan el número de actividad: `a2-cont100`, `a2-cont200`, `a2-vm100` y `a2-vm200`; en la actividad 3 empiezan con `a3-` y en la 4 con `a4-`. Las VMs usan CirrOS 0.5.1, 512 MiB y un vCPU. Los contenedores usan Alpine 3.22 sin red Docker automática.
+
+## Archivos en el repositorio
+
+| Ruta | Contenido |
 |---|---|
-| `init_master.sh` | `INTERFAZ_DATOS [OTRA...]` |
-| `create_network_vlan.sh` | `VLAN RED/CIDR si INICIO,FIN` o `VLAN RED/CIDR no` |
-| `internet_to_network.sh` | `VLAN RED/CIDR` |
-| `routing_networks.sh` | `VLAN_1 VLAN_2` |
-| `no_internet_to_network.sh` | `VLAN RED/CIDR` |
-| `no_routing_networks.sh` | `VLAN_1 VLAN_2` |
-| `init_worker.sh` | `INTERFAZ_DATOS [OTRA...]` |
-| `create_vm.sh` | `NOMBRE OVS VLAN PUERTO_TCP_VNC` |
-| `delete_vm.sh` | `NOMBRE OVS VLAN PUERTO_TCP_VNC` |
+| `DEV/actividad_1/actividad1.sh` | Entrada para actividad 1, compatible con el nuevo conjunto |
+| `DEV/actividad_2/actividad2.sh` | Entrada para actividad 2 |
+| `DEV/actividad_3/actividad3.sh` | Entrada para actividad 3 |
+| `DEV/actividad_4/actividad4.sh` | Entrada para actividad 4 |
+| `DEV/actividad_N/readme.md` | Instrucciones breves del escenario correspondiente |
+| `DEV/comun/orquestar.sh` | Principal compartido en Bash; secuencia SSH desde server4 |
+| `DEV/comun/config.sh` | Inventario, clave SSH, imagen y destinos de prueba |
+| `DEV/comun/configurar_ssh.sh` | Configuración de acceso por clave desde server4 |
+| `DEV/comun/node.sh` | Despliegue y verificación remotos |
+| `DEV/comun/helpers/` | Limpieza selectiva, firewall, contenedores y consola de VMs |
+| `DEV/comun/tests/` | Pruebas locales simuladas y su resultado |
+| `scripts_IP/` | Scripts reutilizados del informe previo |
 
-VLAN: 1 a 4094. Redes: IPv4, dirección de red canónica y prefijo /1 a /30; con DHCP debe quedar espacio para clientes. La primera IP **utilizable** es el gateway y la segunda es el servidor DHCP. El rango excluye red, broadcast y ambas direcciones reservadas. Se rechazan redes solapadas con las rutas conectadas del host. El modo `no` no inicia DHCP; en una VLAN ya gestionada también retira su DHCP anterior. La red de una VLAN existente no se renumera automáticamente.
 
-## Ejemplo de despliegue
+## Preparación en server4
 
-En el **master**, con `ens4` como enlace de datos:
-
-```bash
-sudo ./init_master.sh ens4
-sudo ./create_network_vlan.sh 100 192.168.0.0/24 no
-sudo ./create_network_vlan.sh 200 192.168.2.0/24 si 192.168.2.11,192.168.2.15
-sudo ./internet_to_network.sh 100 192.168.0.0/24
-sudo ./routing_networks.sh 100 200
+Considerando la descarga del repositorio "TEL141_L4_20211602-main":
+```powershell
+scp -P 5804 .\TEL141_L4_20211602-main.zip ubuntu@10.20.11.46:~/
+ssh -p 5804 ubuntu@10.20.11.46
 ```
 
-La salida a Internet se toma de la única interfaz de las rutas por defecto IPv4. Si hay varias, o se requiere seleccionar otra:
+En ubuntu:
 
 ```bash
-sudo env EXT_IF=ens3 ./internet_to_network.sh 100 192.168.0.0/24
+hostname
+sudo apt-get update
+sudo apt-get install -y unzip openssh-client
+unzip TEL141_L4_20211602-main.zip
+cd ~/TEL141_L4_20211602-main
 ```
 
-En cada **worker**, con su enlace de datos real:
+Configuración de acceso y dependencias :
 
 ```bash
-sudo ./init_worker.sh ens4
-sudo ./create_vm.sh vm100 br-int 100 5901
-sudo ./create_vm.sh vm200 br-int 200 5902
+bash DEV/comun/configurar_ssh.sh
+bash DEV/actividad_4/actividad4.sh deps
 ```
 
-Se requiere `/dev/kvm` accesible. Cada VM usa 512 MiB, una vCPU, NIC e1000, TAP de acceso a su VLAN y un delta QCOW2. La MAC incorpora el identificador del host y el nombre de VM. Se usa CirrOS 0.5.1 para mantener continuidad con el laboratorio 3, sin afirmar que sea la versión más reciente. Si la imagen no existe en el almacén privado, se copia la imagen del directorio de ejecución con el mismo nombre o se descarga por HTTPS desde CirrOS. El archivo se valida con `qemu-img info` antes de utilizarlo.
+Se reutiliza la clave `~/.ssh/id_ed25519_tel141_s4` de la primera entrega. Si todavía no existe, se genera una clave dedicada sin frase de paso. La instalación inicial puede solicitar la contraseña de `ubuntu` en cada nodo y confirmar su huella SSH. La guía indica `ubuntu` como contraseña inicial, si no fue cambiada. La clave privada permanece en server4.
 
-Los puertos VNC son **puertos TCP completos**: 5901 se transforma en display `:1`. VNC escucha en `127.0.0.1` del worker. Abra un túnel desde la PC (reemplace usuario, IP y puerto SSH):
+La cuenta debe permitir `sudo -n` en los destinos. Si falla esa comprobación, revisa el acceso administrativo previsto con el responsable del laboratorio. El script no modifica sudoers. `deps` instala paquetes en server1–3; no altera OFS.
+
+## Ejecutar la actividad 1
+
 
 ```bash
-ssh -N -L 30011:127.0.0.1:5901 usuario@IP_DEL_WORKER
+bash DEV/actividad_1/actividad1.sh plan
 ```
 
-En RealVNC conecte a `127.0.0.1:30011`. El puerto local 30011 es solo un ejemplo libre. Para la segunda VM use otra redirección hacia 5902.
-
-En CirrOS, consulte las credenciales mostradas en su consola de arranque. Para **vm100** sin DHCP, como root y tras identificar la interfaz (`ip link`), por ejemplo `eth0`:
+Si el plan termina correctamente:
 
 ```bash
-sudo ip link set eth0 up
-sudo ip addr add 192.168.0.10/24 dev eth0
-sudo ip route add default via 192.168.0.1
-echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf
-ping -c 3 192.168.0.1
-ping -c 3 8.8.8.8
+bash DEV/actividad_1/actividad1.sh deploy
+echo "Codigo de salida actividad 1: $?"
 ```
 
-Use una IP libre y distinta en cada VM. Si una dirección o ruta ya existe, consúltela y ajuste en vez de añadir otra. En **vm200**, CirrOS intenta DHCP al arrancar; compruebe `ip -4 addr` e `ip route`. Si necesita solicitar una concesión y no hay otro cliente DHCP activo, utilice `sudo udhcpc -i eth0 -n -q`. Debe recibir una IP del rango 192.168.2.11 a 192.168.2.15 y gateway 192.168.2.1. Tener DNS 8.8.8.8 no concede acceso a Internet a la VLAN 200.
-
-## Verificación y evidencias
-
-En el master:
+Se habilita DHCP y NAT para ambas VLAN. Se exige comunicación dentro de cada VLAN, acceso a Internet y DNS desde los cuatro clientes, y bloqueo entre VLAN 100 y 200. Para repetir solo las comprobaciones:
 
 ```bash
-sudo ovs-vsctl show
-ip -4 addr show vlan100
-ip -4 addr show vlan200
-sysctl net.ipv4.ip_forward
-sudo iptables -S FORWARD
-sudo iptables -t nat -S POSTROUTING
-sudo ip netns exec ns-dhcp-200 ip -4 addr
-sudo ip netns exec ns-dhcp-200 ss -lunp
-sudo cat /var/lib/tel141-l4/networks/dnsmasq-200.leases
+bash DEV/actividad_1/actividad1.sh verify
 ```
 
-Desde cada VM, pruebe su gateway, la IP real de la VM de la otra VLAN y 8.8.8.8. Repita después de retirar los permisos. Una respuesta del gateway prueba conectividad local; no demuestra por sí sola que exista acceso a Internet o comunicación entre clientes de distintas VLAN.
+Captura de evidencias en el word.
+
+## Ejecutar la actividad 2
+
 
 ```bash
-# Master
-sudo ./no_internet_to_network.sh 100 192.168.0.0/24
-sudo ./no_routing_networks.sh 100 200
-
-# Worker: detiene QEMU y elimina TAP, puerto OVS, delta y metadatos.
-sudo ./delete_vm.sh vm100 br-int 100 5901
-sudo ./delete_vm.sh vm200 br-int 200 5902
+bash DEV/actividad_2/actividad2.sh plan
 ```
 
-El borrado de la VM es definitivo. El proceso se verifica por ejecutable y argumento de disco antes de detenerlo. Si no termina, los recursos se conservan. La base privada se elimina solo cuando no queda ningún delta gestionado. No use esa base como backing file de discos externos al proyecto. La imagen original que se copió desde otro directorio no se elimina.
+Si termina correctamente, se despliega:
 
-## Estado y límites
+```bash
+bash DEV/actividad_2/actividad2.sh deploy
+echo "Codigo de salida actividad 2: $?"
+```
 
-- Estado privado: `/var/lib/tel141-l4/`. No lo borre ni modifique manualmente mientras existan recursos gestionados.
-- La exclusión con `flock` serializa operaciones. El descriptor se cierra en los demonios.
-- Las reglas incluyen comentarios `TEL141-L4-...`; repetir las altas no las duplica. Las bajas retiran las reglas propias de ambos sentidos.
-- No se implementa un gestor de arranque. Las IP, namespaces, procesos y reglas de iptables deben recrearse tras reiniciar. La configuración OVS puede persistir, pero ello no restaura las demás capas.
-- Si falla `create_vm.sh` después de crear el registro, use `delete_vm.sh` con los mismos argumentos antes de reintentar.
-- No se ha ejecutado un despliegue real en los servidores del alumno. Las pruebas incluidas no reemplazan evidencias SSH, pings, DHCP ni arranque de VMs.
+La automatización retira los DHCP anteriores de laboratorio, crea ambas redes con la opción `no` de `create_network_vlan.sh` y habilita NAT. Los contenedores reciben su IP, gateway y DNS directamente. Las VMs arrancan desde una imagen nueva y luego reciben la configuración estática por consola serie: se detienen sus clientes DHCP, se escribe `/etc/network/interfaces` y se aplica la dirección.
+
+CirrOS puede intentar DHCP durante su arranque predeterminado; al finalizar la configuración estática se exige que no queden clientes DHCP activos. No se utiliza una concesión para asignar las IP de esta actividad.
+
+Además de comprobar que no hay DHCP de laboratorio en server3, se realiza una solicitud temporal desde cada contenedor para detectar un servicio residual en su VLAN. Esa prueba utiliza un hook que no modifica la IP estática y termina al concluir. Si consigue una concesión, se considera fallo.
+
+Para repetir las comprobaciones sin recrear recursos:
+
+```bash
+bash DEV/actividad_2/actividad2.sh verify
+echo "Codigo de salida verificacion: $?"
+```
+
+Resultados esperados: IP estática y ruta correctas; ping al gateway, al otro cliente de la misma VLAN y a Internet; DNS operativo; ping entre VLANs fallido; `SIN_DHCP_SERVER3_OK`, `SIN_OFERTAS_DHCP_OK`, `INTERNET_OK`, `AISLAMIENTO_OK` y `PASS` al completar todo.
+
+Captura de evidencias en el word.
+
+## Ejecutar la actividad 3
+
+```bash
+bash DEV/actividad_3/actividad3.sh plan
+```
+
+Si el plan termina correctamente:
+
+```bash
+bash DEV/actividad_3/actividad3.sh deploy
+echo "Codigo de salida actividad 3: $?"
+```
+
+El despliegue limpia la actividad anterior, crea DHCP para ambas VLAN y elimina los permisos NAT específicos anteriores. Instala primero en FORWARD una cadena que bloquea el tráfico encaminado de los clientes, incluidos paquetes de conexiones anteriores. La comunicación local dentro de cada VLAN y DHCP permanecen disponibles.
+
+**La restricción de Internet se aplica a los clientes del laboratorio.** Server3 conserva la conectividad de gestión por `ens3`. El parámetro global `ip_forward` permanece habilitado; la prohibición se aplica mediante reglas explícitas para las redes del slice. Esto permite conservar el comportamiento de gestión del host y comprobar la política del laboratorio por separado.
+
+La validación comprueba primero que server3 sí puede alcanzar el destino externo y que la cadena de protección es la primera regla de FORWARD. Después exige conectividad local desde cada cliente y fallo del ping externo y del ping inter-VLAN. También revisa las concesiones DHCP y las reglas exactas del firewall. No basta con observar un ping fallido.
+
+```bash
+bash DEV/actividad_3/actividad3.sh verify
+echo "Codigo de salida verificacion: $?"
+```
+
+Resultados esperados: concesiones `.11` y `.12`, ping al gateway y al vecino de la misma VLAN correctos, ping a Internet fallido y ping entre VLANs fallido. Deben aparecer `INTERNET_HOST_OK`, `INTERNET_BLOQUEADO_OK`, `AISLAMIENTO_OK` y finalmente `PASS`. El DNS externo anunciado por DHCP tampoco será accesible desde los clientes; no se exige resolución externa en esta actividad.
+
+El código final de la automatización debe ser **0** en ambas actividades: los pings que deben fallar son comprobaciones negativas esperadas y se procesan dentro del script.
+
+Captura de evidencias en el word.
 
 
+## Ejecutar la actividad 4
 
-## Documentación consultada
+La captura de esta actividad muestra en server3 **un DHCP para VLAN 200 y enrutamiento entre VLAN 100 y VLAN 200**. A diferencia de A3, no se crea DHCP para VLAN 100. Como el escenario no muestra una salida a Internet, este perfil mantiene el bloqueo externo. Se conservan los dos contenedores de server1 y las dos VMs de server2 como clientes de prueba.
 
-Consulta: 28 de septiembre de 2026.
+| Cliente | Ubicación | Dirección | Asignación |
+|---|---|---|---|
+| `a4-cont100` | server1 | 192.168.0.11/24 | Estática |
+| `a4-vm100` | server2 | 192.168.0.12/24 | Estática |
+| `a4-cont200` | server1 | 192.168.2.11/24 | DHCP |
+| `a4-vm200` | server2 | 192.168.2.12/24 | DHCP |
 
-- OpenSSH: https://man.openbsd.org/ssh.1
-- OpenSSH configuración: https://man.openbsd.org/ssh_config.5
-- OpenSSH claves: https://man.openbsd.org/ssh-keygen.1
-- Ubuntu OpenSSH: https://ubuntu.com/server/docs/how-to/security/openssh-server/
-- Python subprocess: https://docs.python.org/3/library/subprocess.html
-- Ansible: https://docs.ansible.com/projects/ansible/latest/command_guide/intro_adhoc.html
-- PSSH: https://github.com/lilydjwg/pssh
-- OVS VLAN: https://docs.openvswitch.org/en/latest/faq/vlan/
-- Linux ip_forward: https://docs.kernel.org/networking/ip-sysctl.html
-- dnsmasq: https://thekelleys.org.uk/dnsmasq/docs/dnsmasq-man.html
-- Netfilter NAT: https://www.netfilter.org/documentation/HOWTO/NAT-HOWTO-6.html
-- QEMU: https://www.qemu.org/docs/master/system/invocation.html
-- qemu-img: https://www.qemu.org/docs/master/tools/qemu-img.html
-- CirrOS 0.5.1: https://download.cirros-cloud.net/0.5.1/
+Desde server4, en la raíz del proyecto:
+
+```bash
+bash DEV/actividad_4/actividad4.sh plan
+```
+
+Si el plan termina correctamente:
+
+```bash
+bash DEV/actividad_4/actividad4.sh deploy
+echo "Codigo de salida actividad 4: $?"
+```
+
+El script limpia la topología anterior; crea VLAN 100 sin DHCP y VLAN 200 con DHCP; configura las direcciones de los clientes; ejecuta el script previo `routing_networks.sh 100 200`; e instala una política que permite el tráfico entre ambas subredes y bloquea la salida de los clientes por `ens3`. La conexión de gestión SSH sigue usando `ens3`.
+
+El tránsito entre VLANs se realiza mediante los gateways `192.168.0.1` y `192.168.2.1` y el kernel de server3. Las VLAN siguen separadas en capa 2; se habilita comunicación entre sus redes IPv4 mediante enrutamiento.
+
+Cada cliente debe alcanzar a su gateway, al otro cliente de la misma VLAN y a **los dos clientes de la VLAN opuesta**. Esto cubre contenedor↔contenedor, VM↔VM y contenedor↔VM en ambos sentidos. La verificación también exige que Internet permanezca bloqueado para los clientes, que VLAN 100 no obtenga ofertas DHCP y que VLAN 200 tenga ambas concesiones.
+
+Después de estas pruebas se consultan los contadores del firewall de server3 y se exigen paquetes aceptados en las dos direcciones: `vlan100 → vlan200` y `vlan200 → vlan100`.
+
+```bash
+bash DEV/actividad_4/actividad4.sh verify
+echo "Codigo de salida verificacion: $?"
+```
+
+Deben aparecer `DHCP_LAYOUT_OK VLAN 100: no`, `DHCP_LAYOUT_OK VLAN 200: si`, `ENRUTAMIENTO_INTERVLAN_OK`, `INTERNET_BLOQUEADO_OK`, `ENRUTAMIENTO_BIDIRECCIONAL_CON_CONTADORES_OK` y, al terminar todo, `PASS`. El registro `server3-routing_evidence.log` contiene las reglas y los contadores posteriores a los pings.
+
+Captura de evidencias en el word sobre:  el comando iniciado en server4, una prueba de cada sentido entre VLANs, las asignaciones estáticas/DHCP, los contadores en server3 y el resultado final. Los registros de ambos contenedores y ambas VMs contienen la matriz de pruebas completa.
+
+## Limpieza y cambio de actividad
+
+Cada `deploy` sigue este orden: comprobación de los cuatro destinos → preparación de imágenes → limpieza de server1, server2 y server3 → despliegue en server3, server2 y server1 → espera de los clientes → verificación.
+
+Reconoce los recursos del Lab3, de la primera entrega de A1 y de las cuatro actividades actuales por sus nombres y enlaces a bridges. Incluye bridges OVS/Linux conocidos, TAP, veth, procesos QEMU asociados, contenedores identificados, namespaces DHCP y reglas de firewall del laboratorio.
+
+Antes de limpiar exige que `ens3` conserve la IP y ruta de gestión esperadas. No limpia OFS ni utiliza `pkill` general ni vacía todo iptables. Si encuentra un recurso ambiguo que impide validar la operación, aborta y muestra el motivo.
+
+Conserva inventarios, firewall anterior y discos gestionados en `/var/lib/tel141-a1-backups/ID_DE_EJECUCION/` de cada servidor. El nombre del directorio se mantiene por compatibilidad con la primera entrega. Conserva la base QCOW2 y deja los discos antiguos externos en su ubicación. Los sistemas de archivos de los contenedores retirados no se respaldan; sus volúmenes no se eliminan. No existe restauración automática del escenario anterior.
+
+Para retirar el escenario sin recrearlo:
+
+```bash
+bash DEV/actividad_3/actividad3.sh clean
+```
+
+Para volver a la actividad 1 utiliza el punto de entrada de **este paquete**:
+
+```bash
+bash DEV/actividad_1/actividad1.sh deploy
+```
+
+
+## Evidencias y entrega adicionales
+
+Los registros quedan separados en `DEV/actividad_N/evidencias/FECHA-PID/`, donde N es 1, 2, 3 o 4. La limpieza remota no borra estos registros de server4.
+
+| Evidencia | Archivo principal |
+|---|---|
+| Ejecución desde server4, orden y resultado | `orquestacion.log`, `resultado.txt` |
+| Recursos antes de limpiar | `serverN-check.log` |
+| Limpieza y creación | `serverN-clean.log`, `serverN-deploy.log` |
+| Configuración estática de las VMs de A2 y de VLAN 100 en A4 | `server2-ready.log` |
+| IP y conectividad de ambos contenedores | `server1-verify.log` |
+| IP y conectividad dentro de ambas VMs | `server2-verify.log` |
+| DHCP/ausencia de DHCP, NAT y firewall | `server3-verify.log` |
+| Switch de tránsito | `ofs-verify.log` |
+| Paquetes encaminados entre VLANs en A4 | `server3-routing_evidence.log` |
+
+
+Para la conexión VNC, se abre el túnel hacia server2:
+
+```bash
+ssh -p 5802 -N -L 30011:127.0.0.1:5901 -L 30012:127.0.0.1:5902 ubuntu@10.20.11.46
+```
+
+Estas evidencias son adicionales, en el word se prioriza la evidencia en mencionada en cada actividad.
+
+
