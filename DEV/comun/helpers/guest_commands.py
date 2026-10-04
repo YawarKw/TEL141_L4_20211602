@@ -6,7 +6,7 @@ import re
 import shlex
 
 def command(activity,vlan,kind,test_ip='8.8.8.8',dns_name='example.com'):
-    if activity not in (1,2,3) or vlan not in (100,200) or kind not in ('container','vm'):
+    if activity not in (1,2,3,4) or vlan not in (100,200) or kind not in ('container','vm'):
         raise ValueError('Perfil invalido')
     ipaddress.IPv4Address(test_ip)
     if not re.fullmatch(r'[A-Za-z0-9.-]+',dns_name):raise ValueError('Nombre DNS invalido')
@@ -17,7 +17,7 @@ def command(activity,vlan,kind,test_ip='8.8.8.8',dns_name='example.com'):
     parts=['ip -4 addr show dev eth0','ip route',
            f"ip -4 addr show dev eth0 | grep -Fq '{addr}/24' || exit 11",
            f"ip route | grep -Fq 'default via {gw} ' || exit 12"]
-    if activity==2:
+    if activity==2 or (activity==4 and vlan==100):
         parts+=['command -v pidof >/dev/null || exit 18',
                 'if pidof udhcpc dhclient dhcpcd >/dev/null 2>&1; then echo FALLO_CLIENTE_DHCP; exit 18; fi']
     parts += [f'ping -c 3 -W 3 {gw} || exit 13',f'ping -c 3 -W 3 {prefix}.{peer} || exit 14']
@@ -28,9 +28,15 @@ def command(activity,vlan,kind,test_ip='8.8.8.8',dns_name='example.com'):
         parts += [f'ping -c 2 -W 2 {test_ip}; rc=$?',
                   'if [ "$rc" -eq 0 ]; then echo FALLO_INTERNET_PERMITIDO; exit 19; fi',
                   '[ "$rc" -eq 1 ] || exit 20','echo INTERNET_BLOQUEADO_OK']
-    parts += [f'ping -c 2 -W 2 {opposite}.{peer}; rc=$?',
-              'if [ "$rc" -eq 0 ]; then echo FALLO_AISLAMIENTO; exit 17; fi',
-              '[ "$rc" -eq 1 ] || exit 20','echo AISLAMIENTO_OK']
+    if activity==4:
+        # Cada cliente debe alcanzar ambos clientes de la otra VLAN.
+        parts += [f'ping -c 3 -W 3 {opposite}.11 || exit 24',
+                  f'ping -c 3 -W 3 {opposite}.12 || exit 24',
+                  'echo ENRUTAMIENTO_INTERVLAN_OK']
+    else:
+        parts += [f'ping -c 2 -W 2 {opposite}.{peer}; rc=$?',
+                  'if [ "$rc" -eq 0 ]; then echo FALLO_AISLAMIENTO; exit 17; fi',
+                  '[ "$rc" -eq 1 ] || exit 20','echo AISLAMIENTO_OK']
     return '; '.join(parts)
 
 if __name__=='__main__':
