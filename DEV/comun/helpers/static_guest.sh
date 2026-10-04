@@ -5,7 +5,7 @@ set -eu
 ADDR=${1:?}; GW=${2:?}
 case "$ADDR:$GW" in
   192.168.0.12:192.168.0.1|192.168.2.12:192.168.2.1) ;;
-  *) echo 'Direccion no prevista para la VM de actividad 2'; exit 1 ;;
+  *) echo 'Direccion no prevista para la VM estatica de A2/A4'; exit 1 ;;
 esac
 [ "$(id -u)" -eq 0 ]
 command -v pidof >/dev/null
