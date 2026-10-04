@@ -1,0 +1,1784 @@
+ubuntu@server4:~/TEL141_L4_20211602-main$ bash DEV/actividad_1/actividad1.sh deploy
+ACTIVIDAD 1 | deploy | 20261004T052209Z-6040 | origen server4
+[server1] check
+WARNING: No swap limit support
+{
+  "role": "server1",
+  "management": "ens3",
+  "data": "ens4",
+  "errors": [],
+  "qemu": [],
+  "containers": [
+    {
+      "id": "f362925e0a550a17ecbce771c0ddd234a0af3132ccd5a8bb4b6aea268545c797",
+      "name": "a1-cont200"
+    },
+    {
+      "id": "c93878b4950a0376d5662692165ba9d82f878064c6778b6d4ca6d9f532477b54",
+      "name": "a1-cont100"
+    }
+  ],
+  "namespaces": [],
+  "host_dnsmasq": [],
+  "ovs_bridges": {
+    "br-int": [
+      "a1c100h",
+      "a1c200h",
+      "ens4"
+    ]
+  },
+  "linux_bridges": {},
+  "virtual_interfaces": [
+    "a1c100h",
+    "a1c200h"
+  ],
+  "tap_interfaces": [],
+  "rules": [],
+  "own_chains": [],
+  "addresses": [
+    {
+      "ifindex": 1,
+      "ifname": "lo",
+      "flags": [
+        "LOOPBACK",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 65536,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "loopback",
+      "address": "00:00:00:00:00:00",
+      "broadcast": "00:00:00:00:00:00",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "127.0.0.1",
+          "prefixlen": 8,
+          "scope": "host",
+          "label": "lo",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "::1",
+          "prefixlen": 128,
+          "scope": "host",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 2,
+      "ifname": "ens3",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "fa:16:3e:44:64:4e",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "10.0.10.1",
+          "prefixlen": 24,
+          "broadcast": "10.0.10.255",
+          "scope": "global",
+          "label": "ens3",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::f816:3eff:fe44:644e",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 3,
+      "ifname": "ens4",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "fa:16:3e:aa:41:b2",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::f816:3eff:feaa:41b2",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 6,
+      "ifname": "docker0",
+      "flags": [
+        "NO-CARRIER",
+        "BROADCAST",
+        "MULTICAST",
+        "UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "DOWN",
+      "group": "default",
+      "link_type": "ether",
+      "address": "ba:10:05:c8:f0:0c",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "172.17.0.1",
+          "prefixlen": 16,
+          "broadcast": "172.17.255.255",
+          "scope": "global",
+          "label": "docker0",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 7,
+      "ifname": "ovs-system",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST"
+      ],
+      "mtu": 1500,
+      "qdisc": "noop",
+      "operstate": "DOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "7e:15:d0:0e:14:e4",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": []
+    },
+    {
+      "ifindex": 8,
+      "ifname": "br-int",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "c2:22:2b:d9:ce:44",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::c022:2bff:fed9:ce44",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 10,
+      "link_index": 9,
+      "ifname": "a1c100h",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "6a:ec:6b:a9:73:16",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "link_netnsid": 0,
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::68ec:6bff:fea9:7316",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 12,
+      "link_index": 11,
+      "ifname": "a1c200h",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "96:14:e3:7b:8f:c4",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "link_netnsid": 1,
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::9414:e3ff:fe7b:8fc4",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "dst": "default",
+      "gateway": "10.0.10.100",
+      "dev": "ens3",
+      "protocol": "static",
+      "flags": []
+    }
+  ],
+  "iptables_save": "# Generated by iptables-save v1.8.4 on Sun Oct  4 05:22:20 2026\n*nat\n:PREROUTING ACCEPT [66:4217]\n:INPUT ACCEPT [66:4217]\n:OUTPUT ACCEPT [6054:386655]\n:POSTROUTING ACCEPT [6054:386655]\n:DOCKER - [0:0]\n-A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER\n-A OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER\n-A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE\n-A DOCKER -i docker0 -j RETURN\nCOMMIT\n# Completed on Sun Oct  4 05:22:20 2026\n# Generated by iptables-save v1.8.4 on Sun Oct  4 05:22:20 2026\n*filter\n:INPUT ACCEPT [24459:8690056]\n:FORWARD DROP [0:0]\n:OUTPUT ACCEPT [31808:2588761]\n:DOCKER - [0:0]\n:DOCKER-BRIDGE - [0:0]\n:DOCKER-CT - [0:0]\n:DOCKER-FORWARD - [0:0]\n:DOCKER-ISOLATION-STAGE-1 - [0:0]\n:DOCKER-ISOLATION-STAGE-2 - [0:0]\n:DOCKER-USER - [0:0]\n-A FORWARD -j DOCKER-USER\n-A FORWARD -j DOCKER-FORWARD\n-A DOCKER ! -i docker0 -o docker0 -j DROP\n-A DOCKER-BRIDGE -o docker0 -j DOCKER\n-A DOCKER-CT -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A DOCKER-FORWARD -j DOCKER-CT\n-A DOCKER-FORWARD -j DOCKER-ISOLATION-STAGE-1\n-A DOCKER-FORWARD -j DOCKER-BRIDGE\n-A DOCKER-FORWARD -i docker0 -j ACCEPT\n-A DOCKER-ISOLATION-STAGE-1 -i docker0 ! -o docker0 -j DOCKER-ISOLATION-STAGE-2\n-A DOCKER-ISOLATION-STAGE-2 -o docker0 -j DROP\n-A DOCKER-USER -j RETURN\nCOMMIT\n# Completed on Sun Oct  4 05:22:20 2026\n",
+  "disks": "Conservar discos; archivar registros y deltas gestionados, sin borrar la imagen base."
+}
+[server2] check
+{
+  "role": "server2",
+  "management": "ens3",
+  "data": "ens4",
+  "errors": [],
+  "qemu": [
+    {
+      "pid": 8789,
+      "start": "21741169",
+      "state": "S",
+      "exe": "qemu-system-x86_64",
+      "argv": [
+        "qemu-system-x86_64",
+        "-name",
+        "a1-vm100",
+        "-enable-kvm",
+        "-m",
+        "512",
+        "-smp",
+        "1",
+        "-drive",
+        "file=/var/lib/tel141-l4/vms/a1-vm100/disk.qcow2,format=qcow2,if=virtio",
+        "-netdev",
+        "tap,id=net0,ifname=t32bf83366936,script=no,downscript=no",
+        "-device",
+        "e1000,netdev=net0,mac=02:20:21:16:01:01",
+        "-vnc",
+        "127.0.0.1:1",
+        "-monitor",
+        "none",
+        "-serial",
+        "unix:/var/lib/tel141-l4/vms/a1-vm100/serial.sock,server,nowait",
+        "-daemonize",
+        "-pidfile",
+        "/var/lib/tel141-l4/vms/a1-vm100/qemu.pid"
+      ]
+    },
+    {
+      "pid": 8830,
+      "start": "21741194",
+      "state": "S",
+      "exe": "qemu-system-x86_64",
+      "argv": [
+        "qemu-system-x86_64",
+        "-name",
+        "a1-vm200",
+        "-enable-kvm",
+        "-m",
+        "512",
+        "-smp",
+        "1",
+        "-drive",
+        "file=/var/lib/tel141-l4/vms/a1-vm200/disk.qcow2,format=qcow2,if=virtio",
+        "-netdev",
+        "tap,id=net0,ifname=td7b16fbdd988,script=no,downscript=no",
+        "-device",
+        "e1000,netdev=net0,mac=02:20:21:16:02:01",
+        "-vnc",
+        "127.0.0.1:2",
+        "-monitor",
+        "none",
+        "-serial",
+        "unix:/var/lib/tel141-l4/vms/a1-vm200/serial.sock,server,nowait",
+        "-daemonize",
+        "-pidfile",
+        "/var/lib/tel141-l4/vms/a1-vm200/qemu.pid"
+      ]
+    }
+  ],
+  "containers": [],
+  "namespaces": [],
+  "host_dnsmasq": [],
+  "ovs_bridges": {
+    "br-int": [
+      "ens4",
+      "t32bf83366936",
+      "td7b16fbdd988"
+    ]
+  },
+  "linux_bridges": {},
+  "virtual_interfaces": [
+    "t32bf83366936",
+    "td7b16fbdd988"
+  ],
+  "tap_interfaces": [
+    "t32bf83366936",
+    "td7b16fbdd988"
+  ],
+  "rules": [],
+  "own_chains": [],
+  "addresses": [
+    {
+      "ifindex": 1,
+      "ifname": "lo",
+      "flags": [
+        "LOOPBACK",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 65536,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "loopback",
+      "address": "00:00:00:00:00:00",
+      "broadcast": "00:00:00:00:00:00",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "127.0.0.1",
+          "prefixlen": 8,
+          "scope": "host",
+          "label": "lo",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "::1",
+          "prefixlen": 128,
+          "scope": "host",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 2,
+      "ifname": "ens3",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "fa:16:3e:cb:b1:10",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "10.0.10.2",
+          "prefixlen": 24,
+          "broadcast": "10.0.10.255",
+          "scope": "global",
+          "label": "ens3",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::f816:3eff:fecb:b110",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 3,
+      "ifname": "ens4",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "fa:16:3e:d0:24:78",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::f816:3eff:fed0:2478",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 10,
+      "ifname": "ovs-system",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST"
+      ],
+      "mtu": 1500,
+      "qdisc": "noop",
+      "operstate": "DOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "6e:fb:39:81:a7:c0",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": []
+    },
+    {
+      "ifindex": 11,
+      "ifname": "br-int",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "e6:2e:d4:68:47:4d",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::e42e:d4ff:fe68:474d",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 12,
+      "ifname": "t32bf83366936",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "ba:7c:f6:b2:92:cb",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::b87c:f6ff:feb2:92cb",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 13,
+      "ifname": "td7b16fbdd988",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "ba:98:a2:58:7f:f2",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::b898:a2ff:fe58:7ff2",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "dst": "default",
+      "gateway": "10.0.10.100",
+      "dev": "ens3",
+      "protocol": "static",
+      "flags": []
+    }
+  ],
+  "iptables_save": "",
+  "disks": "Conservar discos; archivar registros y deltas gestionados, sin borrar la imagen base."
+}
+[server3] check
+{
+  "role": "server3",
+  "management": "ens3",
+  "data": "ens4",
+  "errors": [],
+  "qemu": [],
+  "containers": [],
+  "namespaces": [
+    {
+      "name": "ns-dhcp-200",
+      "id": 1,
+      "processes": [
+        {
+          "pid": 8916,
+          "start": "24426693",
+          "state": "S",
+          "exe": "dnsmasq",
+          "argv": [
+            "dnsmasq",
+            "--conf-file=/var/lib/tel141-l4/networks/dnsmasq-200.conf"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ns-dhcp-100",
+      "id": 0,
+      "processes": [
+        {
+          "pid": 8811,
+          "start": "24426660",
+          "state": "S",
+          "exe": "dnsmasq",
+          "argv": [
+            "dnsmasq",
+            "--conf-file=/var/lib/tel141-l4/networks/dnsmasq-100.conf"
+          ]
+        }
+      ]
+    }
+  ],
+  "host_dnsmasq": [],
+  "ovs_bridges": {
+    "br-int": [
+      "dh100h",
+      "dh200h",
+      "ens4",
+      "vlan100",
+      "vlan200"
+    ]
+  },
+  "linux_bridges": {},
+  "virtual_interfaces": [
+    "dh100h",
+    "dh200h",
+    "vlan100",
+    "vlan200"
+  ],
+  "tap_interfaces": [],
+  "rules": [
+    [
+      "nat",
+      [
+        "-A",
+        "POSTROUTING",
+        "-s",
+        "192.168.2.0/24",
+        "-o",
+        "ens3",
+        "-m",
+        "comment",
+        "--comment",
+        "TEL141-L4-internet-200",
+        "-j",
+        "MASQUERADE"
+      ]
+    ],
+    [
+      "nat",
+      [
+        "-A",
+        "POSTROUTING",
+        "-s",
+        "192.168.0.0/24",
+        "-o",
+        "ens3",
+        "-m",
+        "comment",
+        "--comment",
+        "TEL141-L4-internet-100",
+        "-j",
+        "MASQUERADE"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "INPUT",
+        "-j",
+        "TEL141_RF_IN"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "FORWARD",
+        "-j",
+        "TEL141_RF"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "FORWARD",
+        "-d",
+        "192.168.2.0/24",
+        "-i",
+        "ens3",
+        "-o",
+        "vlan200",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "RELATED,ESTABLISHED",
+        "-m",
+        "comment",
+        "--comment",
+        "TEL141-L4-internet-200",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "FORWARD",
+        "-s",
+        "192.168.2.0/24",
+        "-i",
+        "vlan200",
+        "-o",
+        "ens3",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "NEW,RELATED,ESTABLISHED",
+        "-m",
+        "comment",
+        "--comment",
+        "TEL141-L4-internet-200",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "FORWARD",
+        "-d",
+        "192.168.0.0/24",
+        "-i",
+        "ens3",
+        "-o",
+        "vlan100",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "RELATED,ESTABLISHED",
+        "-m",
+        "comment",
+        "--comment",
+        "TEL141-L4-internet-100",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "FORWARD",
+        "-s",
+        "192.168.0.0/24",
+        "-i",
+        "vlan100",
+        "-o",
+        "ens3",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "NEW,RELATED,ESTABLISHED",
+        "-m",
+        "comment",
+        "--comment",
+        "TEL141-L4-internet-100",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-i",
+        "vlan100",
+        "-o",
+        "vlan200",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-i",
+        "vlan200",
+        "-o",
+        "vlan100",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-s",
+        "192.168.0.0/24",
+        "-i",
+        "vlan100",
+        "-o",
+        "ens3",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "NEW,RELATED,ESTABLISHED",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-d",
+        "192.168.0.0/24",
+        "-i",
+        "ens3",
+        "-o",
+        "vlan100",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "RELATED,ESTABLISHED",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-i",
+        "vlan100",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-o",
+        "vlan100",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-s",
+        "192.168.0.0/24",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-d",
+        "192.168.0.0/24",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-s",
+        "192.168.2.0/24",
+        "-i",
+        "vlan200",
+        "-o",
+        "ens3",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "NEW,RELATED,ESTABLISHED",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-d",
+        "192.168.2.0/24",
+        "-i",
+        "ens3",
+        "-o",
+        "vlan200",
+        "-m",
+        "conntrack",
+        "--ctstate",
+        "RELATED,ESTABLISHED",
+        "-j",
+        "ACCEPT"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-i",
+        "vlan200",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-o",
+        "vlan200",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-s",
+        "192.168.2.0/24",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-d",
+        "192.168.2.0/24",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF",
+        "-j",
+        "RETURN"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF_IN",
+        "-d",
+        "192.168.2.0/24",
+        "-i",
+        "vlan100",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF_IN",
+        "-d",
+        "192.168.0.0/24",
+        "-i",
+        "vlan200",
+        "-j",
+        "DROP"
+      ]
+    ],
+    [
+      "filter",
+      [
+        "-A",
+        "TEL141_RF_IN",
+        "-j",
+        "RETURN"
+      ]
+    ]
+  ],
+  "own_chains": [
+    [
+      "filter",
+      "TEL141_RF"
+    ],
+    [
+      "filter",
+      "TEL141_RF_IN"
+    ]
+  ],
+  "addresses": [
+    {
+      "ifindex": 1,
+      "ifname": "lo",
+      "flags": [
+        "LOOPBACK",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 65536,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "loopback",
+      "address": "00:00:00:00:00:00",
+      "broadcast": "00:00:00:00:00:00",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "127.0.0.1",
+          "prefixlen": 8,
+          "scope": "host",
+          "label": "lo",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "::1",
+          "prefixlen": 128,
+          "scope": "host",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 2,
+      "ifname": "ens3",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "fa:16:3e:2e:0b:37",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "10.0.10.3",
+          "prefixlen": 24,
+          "broadcast": "10.0.10.255",
+          "scope": "global",
+          "label": "ens3",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::f816:3eff:fe2e:b37",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 3,
+      "ifname": "ens4",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "fq_codel",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "fa:16:3e:d4:98:9f",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::f816:3eff:fed4:989f",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 9,
+      "ifname": "ovs-system",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST"
+      ],
+      "mtu": 1500,
+      "qdisc": "noop",
+      "operstate": "DOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "12:42:44:cf:5c:e8",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": []
+    },
+    {
+      "ifindex": 10,
+      "ifname": "br-int",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "6a:06:91:c6:59:46",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::6806:91ff:fec6:5946",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 11,
+      "ifname": "vlan100",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "aa:55:2b:85:45:9c",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "192.168.0.1",
+          "prefixlen": 24,
+          "scope": "global",
+          "label": "vlan100",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::a855:2bff:fe85:459c",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 13,
+      "link_index": 12,
+      "ifname": "dh100h",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "ee:ae:ce:40:9d:8d",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "link_netnsid": 0,
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::ecae:ceff:fe40:9d8d",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 14,
+      "ifname": "vlan200",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "operstate": "UNKNOWN",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "72:41:40:99:a7:69",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "addr_info": [
+        {
+          "family": "inet",
+          "local": "192.168.2.1",
+          "prefixlen": 24,
+          "scope": "global",
+          "label": "vlan200",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        },
+        {
+          "family": "inet6",
+          "local": "fe80::7041:40ff:fe99:a769",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    },
+    {
+      "ifindex": 16,
+      "link_index": 15,
+      "ifname": "dh200h",
+      "flags": [
+        "BROADCAST",
+        "MULTICAST",
+        "UP",
+        "LOWER_UP"
+      ],
+      "mtu": 1500,
+      "qdisc": "noqueue",
+      "master": "ovs-system",
+      "operstate": "UP",
+      "group": "default",
+      "txqlen": 1000,
+      "link_type": "ether",
+      "address": "1e:fc:ec:1e:c0:ac",
+      "broadcast": "ff:ff:ff:ff:ff:ff",
+      "link_netnsid": 1,
+      "addr_info": [
+        {
+          "family": "inet6",
+          "local": "fe80::1cfc:ecff:fe1e:c0ac",
+          "prefixlen": 64,
+          "scope": "link",
+          "valid_life_time": 4294967295,
+          "preferred_life_time": 4294967295
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "dst": "default",
+      "gateway": "10.0.10.100",
+      "dev": "ens3",
+      "protocol": "static",
+      "flags": []
+    }
+  ],
+  "iptables_save": "# Generated by iptables-save v1.8.4 on Sun Oct  4 05:22:21 2026\n*nat\n:PREROUTING ACCEPT [75:5232]\n:INPUT ACCEPT [23:1792]\n:OUTPUT ACCEPT [9:596]\n:POSTROUTING ACCEPT [9:596]\n-A POSTROUTING -s 192.168.2.0/24 -o ens3 -m comment --comment TEL141-L4-internet-200 -j MASQUERADE\n-A POSTROUTING -s 192.168.0.0/24 -o ens3 -m comment --comment TEL141-L4-internet-100 -j MASQUERADE\nCOMMIT\n# Completed on Sun Oct  4 05:22:21 2026\n# Generated by iptables-save v1.8.4 on Sun Oct  4 05:22:21 2026\n*filter\n:INPUT ACCEPT [495:144324]\n:FORWARD DROP [0:0]\n:OUTPUT ACCEPT [486:85164]\n:TEL141_RF - [0:0]\n:TEL141_RF_IN - [0:0]\n-A INPUT -j TEL141_RF_IN\n-A FORWARD -j TEL141_RF\n-A FORWARD -d 192.168.2.0/24 -i ens3 -o vlan200 -m conntrack --ctstate RELATED,ESTABLISHED -m comment --comment TEL141-L4-internet-200 -j ACCEPT\n-A FORWARD -s 192.168.2.0/24 -i vlan200 -o ens3 -m conntrack --ctstate NEW,RELATED,ESTABLISHED -m comment --comment TEL141-L4-internet-200 -j ACCEPT\n-A FORWARD -d 192.168.0.0/24 -i ens3 -o vlan100 -m conntrack --ctstate RELATED,ESTABLISHED -m comment --comment TEL141-L4-internet-100 -j ACCEPT\n-A FORWARD -s 192.168.0.0/24 -i vlan100 -o ens3 -m conntrack --ctstate NEW,RELATED,ESTABLISHED -m comment --comment TEL141-L4-internet-100 -j ACCEPT\n-A TEL141_RF -i vlan100 -o vlan200 -j DROP\n-A TEL141_RF -i vlan200 -o vlan100 -j DROP\n-A TEL141_RF -s 192.168.0.0/24 -i vlan100 -o ens3 -m conntrack --ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n-A TEL141_RF -d 192.168.0.0/24 -i ens3 -o vlan100 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A TEL141_RF -i vlan100 -j DROP\n-A TEL141_RF -o vlan100 -j DROP\n-A TEL141_RF -s 192.168.0.0/24 -j DROP\n-A TEL141_RF -d 192.168.0.0/24 -j DROP\n-A TEL141_RF -s 192.168.2.0/24 -i vlan200 -o ens3 -m conntrack --ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n-A TEL141_RF -d 192.168.2.0/24 -i ens3 -o vlan200 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\n-A TEL141_RF -i vlan200 -j DROP\n-A TEL141_RF -o vlan200 -j DROP\n-A TEL141_RF -s 192.168.2.0/24 -j DROP\n-A TEL141_RF -d 192.168.2.0/24 -j DROP\n-A TEL141_RF -j RETURN\n-A TEL141_RF_IN -d 192.168.2.0/24 -i vlan100 -j DROP\n-A TEL141_RF_IN -d 192.168.0.0/24 -i vlan200 -j DROP\n-A TEL141_RF_IN -j RETURN\nCOMMIT\n# Completed on Sun Oct  4 05:22:21 2026\n",
+  "disks": "Conservar discos; archivar registros y deltas gestionados, sin borrar la imagen base."
+}
+[ofs] check
+OFS OK: OFS ; trunks de datos: ens4,ens5,ens6,ens7,ens8
+817a75af-8df8-436f-b176-e1751763b130
+    Bridge OFS
+        Port "ens6"
+            Interface "ens6"
+        Port "ens8"
+            Interface "ens8"
+        Port "ens4"
+            Interface "ens4"
+        Port "ens5"
+            Interface "ens5"
+        Port OFS
+            Interface OFS
+                type: internal
+        Port "ens7"
+            Interface "ens7"
+    ovs_version: "2.9.5"
+[server1] assets
+["alpine@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8"]
+/sbin/udhcpc
+/sbin/ip
+/sbin/ifconfig
+/usr/bin/nslookup
+/bin/ping
+/bin/pidof
+[server2] assets
+image: /var/lib/tel141-l4/images/cirros-0.5.1-x86_64-disk.img
+file format: qcow2
+virtual size: 112 MiB (117440512 bytes)
+disk size: 15.6 MiB
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    lazy refcounts: false
+    refcount bits: 16
+    corrupt: false
+[server1] clean
+LIMPIEZA OK en server1. Inventario y discos previos: /var/lib/tel141-a1-backups/20261004T052209Z-6040
+[server2] clean
+LIMPIEZA OK en server2. Inventario y discos previos: /var/lib/tel141-a1-backups/20261004T052209Z-6040
+[server3] clean
+LIMPIEZA OK en server3. Inventario y discos previos: /var/lib/tel141-a1-backups/20261004T052209Z-6040
+[server3] deploy
+net.ipv4.ip_forward = 1
+Master listo: br-int, forwarding IPv4=1 y politica FORWARD=DROP.
+dnsmasq: syntax check OK.
+VLAN 100: gateway 192.168.0.1; DHCP 192.168.0.2 en ns-dhcp-100; rango 192.168.0.11,192.168.0.15.
+VLAN 100 con NAT y FORWARD por ens3.
+dnsmasq: syntax check OK.
+VLAN 200: gateway 192.168.2.1; DHCP 192.168.2.2 en ns-dhcp-200; rango 192.168.2.11,192.168.2.15.
+VLAN 200 con NAT y FORWARD por ens3.
+[server2] deploy
+Worker listo: br-int y enlaces trunk activos.
+Formatting '/var/lib/tel141-l4/vms/a1-vm100/disk.qcow2', fmt=qcow2 size=117440512 backing_file=/var/lib/tel141-l4/images/cirros-0.5.1-x86_64-disk.img backing_fmt=qcow2 cluster_size=65536 lazy_refcounts=off refcount_bits=16
+qemu-system-x86_64: warning: host doesn't support requested feature: CPUID.80000001H:ECX.svm [bit 2]
+VM a1-vm100: TAP t32bf83366936, VLAN 100, VNC local 127.0.0.1:5901 (display :1).
+Formatting '/var/lib/tel141-l4/vms/a1-vm200/disk.qcow2', fmt=qcow2 size=117440512 backing_file=/var/lib/tel141-l4/images/cirros-0.5.1-x86_64-disk.img backing_fmt=qcow2 cluster_size=65536 lazy_refcounts=off refcount_bits=16
+qemu-system-x86_64: warning: host doesn't support requested feature: CPUID.80000001H:ECX.svm [bit 2]
+VM a1-vm200: TAP td7b16fbdd988, VLAN 200, VNC local 127.0.0.1:5902 (display :2).
+[server1] deploy
+Worker listo: br-int y enlaces trunk activos.
+d8581eef0a920304c148ffbefa3fa5c022e41939c656e8023c9743f680782fcd
+Contenedor a1-cont100 conectado a VLAN 100; cliente DHCP iniciado.
+a0ceea90938be6358427021b8cb93c25d7611aba429660b04e1c85ba1592b442
+Contenedor a1-cont200 conectado a VLAN 200; cliente DHCP iniciado.
+[server1] ready
+udhcpc: started, v1.37.0
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 192.168.0.11, server 192.168.0.2
+udhcpc: lease of 192.168.0.11 obtained from 192.168.0.2, lease time 43200
+udhcpc: started, v1.37.0
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 192.168.2.11, server 192.168.2.2
+udhcpc: lease of 192.168.2.11 obtained from 192.168.2.2, lease time 43200
+[server2] ready
+[server3] verify
+6f0eb54f-2ce9-4b85-8110-2a5df45533bc
+    Bridge br-int
+        Port dh200h
+            tag: 200
+            Interface dh200h
+        Port ens4
+            Interface ens4
+        Port vlan100
+            tag: 100
+            Interface vlan100
+                type: internal
+        Port br-int
+            Interface br-int
+                type: internal
+        Port vlan200
+            tag: 200
+            Interface vlan200
+                type: internal
+        Port dh100h
+            tag: 100
+            Interface dh100h
+    ovs_version: "2.13.8"
+Chain TEL141_RF (1 references)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 DROP       all  --  vlan100 vlan200  0.0.0.0/0            0.0.0.0/0
+    0     0 DROP       all  --  vlan200 vlan100  0.0.0.0/0            0.0.0.0/0
+   98  7032 ACCEPT     all  --  vlan100 ens3    192.168.0.0/24       0.0.0.0/0            ctstate NEW,RELATED,ESTABLISHED
+   67  5598 ACCEPT     all  --  ens3   vlan100  0.0.0.0/0            192.168.0.0/24       ctstate RELATED,ESTABLISHED
+    0     0 DROP       all  --  vlan100 *       0.0.0.0/0            0.0.0.0/0
+    0     0 DROP       all  --  *      vlan100  0.0.0.0/0            0.0.0.0/0
+    0     0 DROP       all  --  *      *       192.168.0.0/24       0.0.0.0/0
+    0     0 DROP       all  --  *      *       0.0.0.0/0            192.168.0.0/24
+   98  7032 ACCEPT     all  --  vlan200 ens3    192.168.2.0/24       0.0.0.0/0            ctstate NEW,RELATED,ESTABLISHED
+   67  5598 ACCEPT     all  --  ens3   vlan200  0.0.0.0/0            192.168.2.0/24       ctstate RELATED,ESTABLISHED
+    0     0 DROP       all  --  vlan200 *       0.0.0.0/0            0.0.0.0/0
+    0     0 DROP       all  --  *      vlan200  0.0.0.0/0            0.0.0.0/0
+    0     0 DROP       all  --  *      *       192.168.2.0/24       0.0.0.0/0
+    0     0 DROP       all  --  *      *       0.0.0.0/0            192.168.2.0/24
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0
+Chain TEL141_RF_IN (1 references)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 DROP       all  --  vlan100 *       0.0.0.0/0            192.168.2.0/24
+    0     0 DROP       all  --  vlan200 *       0.0.0.0/0            192.168.0.0/24
+   40  7218 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0
+POLITICA IPv4 OK: actividad 1; encaminamiento y salida coherentes.
+PING 8.8.8.8 (8.8.8.8) from 10.0.10.3 ens3: 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=111 time=36.3 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=111 time=35.0 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=111 time=34.9 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 34.882/35.382/36.292/0.644 ms
+INTERNET_HOST_OK
+DHCP_LAYOUT_OK VLAN 100: si
+DHCP_LAYOUT_OK VLAN 200: si
+19: vlan100: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 192.168.0.1/24 scope global vlan100
+       valid_lft forever preferred_lft forever
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+20: dh100n@if21: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
+    inet 192.168.0.2/24 scope global dh100n
+       valid_lft forever preferred_lft forever
+UNCONN     0          0               0.0.0.0%dh100n:67           0.0.0.0:*
+1791134559 02:20:21:16:01:01 192.168.0.12 cirros 01:02:20:21:16:01:01
+1791134552 02:20:21:16:01:00 192.168.0.11 * 01:02:20:21:16:01:00
+22: vlan200: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 192.168.2.1/24 scope global vlan200
+       valid_lft forever preferred_lft forever
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+23: dh200n@if24: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
+    inet 192.168.2.2/24 scope global dh200n
+       valid_lft forever preferred_lft forever
+UNCONN     0          0               0.0.0.0%dh200n:67           0.0.0.0:*
+1791134560 02:20:21:16:02:01 192.168.2.12 cirros 01:02:20:21:16:02:01
+1791134553 02:20:21:16:02:00 192.168.2.11 * 01:02:20:21:16:02:00
+Chain POSTROUTING (policy ACCEPT 2 packets, 148 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+   18  1102 MASQUERADE  all  --  *      ens3    192.168.2.0/24       0.0.0.0/0            /* TEL141-L4-internet-200 */
+   18  1102 MASQUERADE  all  --  *      ens3    192.168.0.0/24       0.0.0.0/0            /* TEL141-L4-internet-100 */
+VERIFICACION OK server3 actividad 1
+[server1] verify
+44a77839-8a54-43e0-8ad6-4ccb8b9827e5
+    Bridge br-int
+        Port br-int
+            Interface br-int
+                type: internal
+        Port a1c100h
+            tag: 100
+            Interface a1c100h
+        Port a1c200h
+            tag: 200
+            Interface a1c200h
+        Port ens4
+            Interface ens4
+    ovs_version: "2.13.8"
+CONTAINER ID   IMAGE         COMMAND            CREATED          STATUS          PORTS     NAMES
+a0ceea90938b   alpine:3.22   "sleep infinity"   22 seconds ago   Up 21 seconds             a1-cont200
+d8581eef0a92   alpine:3.22   "sleep infinity"   22 seconds ago   Up 22 seconds             a1-cont100
+VERIFICANDO CONTENEDOR VLAN 100, actividad 1
+15: eth0@if16: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
+    inet 192.168.0.11/24 brd 192.168.0.255 scope global eth0
+       valid_lft forever preferred_lft forever
+default via 192.168.0.1 dev eth0
+192.168.0.0/24 dev eth0 scope link  src 192.168.0.11
+PING 192.168.0.1 (192.168.0.1): 56 data bytes
+64 bytes from 192.168.0.1: seq=0 ttl=64 time=8.293 ms
+64 bytes from 192.168.0.1: seq=1 ttl=64 time=1.019 ms
+64 bytes from 192.168.0.1: seq=2 ttl=64 time=1.060 ms
+
+--- 192.168.0.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.019/3.457/8.293 ms
+PING 192.168.0.12 (192.168.0.12): 56 data bytes
+64 bytes from 192.168.0.12: seq=0 ttl=64 time=7.687 ms
+64 bytes from 192.168.0.12: seq=1 ttl=64 time=1.840 ms
+64 bytes from 192.168.0.12: seq=2 ttl=64 time=1.854 ms
+
+--- 192.168.0.12 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.840/3.793/7.687 ms
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=0 ttl=110 time=35.900 ms
+64 bytes from 8.8.8.8: seq=1 ttl=110 time=36.186 ms
+64 bytes from 8.8.8.8: seq=2 ttl=110 time=36.055 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 35.900/36.047/36.186 ms
+Server:         8.8.8.8
+Address:        8.8.8.8:53
+
+Non-authoritative answer:
+Name:   example.com
+Address: 104.20.23.154
+Name:   example.com
+Address: 172.66.147.243
+
+Non-authoritative answer:
+Name:   example.com
+Address: 2606:4700:10::6814:179a
+Name:   example.com
+Address: 2606:4700:10::ac42:93f3
+
+INTERNET_OK
+PING 192.168.2.12 (192.168.2.12): 56 data bytes
+
+--- 192.168.2.12 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+AISLAMIENTO_OK
+VERIFICANDO CONTENEDOR VLAN 200, actividad 1
+17: eth0@if18: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
+    inet 192.168.2.11/24 brd 192.168.2.255 scope global eth0
+       valid_lft forever preferred_lft forever
+default via 192.168.2.1 dev eth0
+192.168.2.0/24 dev eth0 scope link  src 192.168.2.11
+PING 192.168.2.1 (192.168.2.1): 56 data bytes
+64 bytes from 192.168.2.1: seq=0 ttl=64 time=7.787 ms
+64 bytes from 192.168.2.1: seq=1 ttl=64 time=1.110 ms
+64 bytes from 192.168.2.1: seq=2 ttl=64 time=1.018 ms
+
+--- 192.168.2.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.018/3.305/7.787 ms
+PING 192.168.2.12 (192.168.2.12): 56 data bytes
+64 bytes from 192.168.2.12: seq=0 ttl=64 time=8.526 ms
+64 bytes from 192.168.2.12: seq=1 ttl=64 time=1.640 ms
+64 bytes from 192.168.2.12: seq=2 ttl=64 time=1.659 ms
+
+--- 192.168.2.12 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.640/3.941/8.526 ms
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=0 ttl=110 time=35.860 ms
+64 bytes from 8.8.8.8: seq=1 ttl=110 time=35.785 ms
+64 bytes from 8.8.8.8: seq=2 ttl=110 time=36.624 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 35.785/36.089/36.624 ms
+Server:         8.8.8.8
+Address:        8.8.8.8:53
+
+Non-authoritative answer:
+Name:   example.com
+Address: 104.20.23.154
+Name:   example.com
+Address: 172.66.147.243
+
+Non-authoritative answer:
+Name:   example.com
+Address: 2606:4700:10::6814:179a
+Name:   example.com
+Address: 2606:4700:10::ac42:93f3
+
+INTERNET_OK
+PING 192.168.0.12 (192.168.0.12): 56 data bytes
+
+--- 192.168.0.12 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+AISLAMIENTO_OK
+VERIFICACION OK server1 actividad 1
+[server2] verify
+baa8600b-8220-4764-b51b-edaab6f6ac5d
+    Bridge br-int
+        Port br-int
+            Interface br-int
+                type: internal
+        Port ens4
+            Interface ens4
+        Port t32bf83366936
+            tag: 100
+            Interface t32bf83366936
+        Port td7b16fbdd988
+            tag: 200
+            Interface td7b16fbdd988
+    ovs_version: "2.13.8"
+State     Recv-Q    Send-Q       Local Address:Port        Peer Address:Port    Process                                 
+LISTEN    0         1                127.0.0.1:5901             0.0.0.0:*        users:(("qemu-system-x86",pid=10869,fd=18))
+LISTEN    0         1                127.0.0.1:5902             0.0.0.0:*        users:(("qemu-system-x86",pid=10912,fd=18))
+VERIFICANDO VM VLAN 100, actividad 1
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast qlen 1000
+    inet 192.168.0.12/24 brd 192.168.0.255 scope global eth0
+       valid_lft forever preferred_lft forever
+default via 192.168.0.1 dev eth0
+192.168.0.0/24 dev eth0 scope link  src 192.168.0.12
+PING 192.168.0.1 (192.168.0.1): 56 data bytes
+64 bytes from 192.168.0.1: seq=0 ttl=64 time=5.674 ms
+64 bytes from 192.168.0.1: seq=1 ttl=64 time=2.227 ms
+64 bytes from 192.168.0.1: seq=2 ttl=64 time=1.501 ms
+
+--- 192.168.0.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.501/3.134/5.674 ms
+PING 192.168.0.11 (192.168.0.11): 56 data bytes
+64 bytes from 192.168.0.11: seq=0 ttl=64 time=5.777 ms
+64 bytes from 192.168.0.11: seq=1 ttl=64 time=2.038 ms
+64 bytes from 192.168.0.11: seq=2 ttl=64 time=1.993 ms
+
+--- 192.168.0.11 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.993/3.269/5.777 ms
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=0 ttl=110 time=50.187 ms
+64 bytes from 8.8.8.8: seq=1 ttl=110 time=36.223 ms
+64 bytes from 8.8.8.8: seq=2 ttl=110 time=39.027 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 36.223/41.812/50.187 ms
+Server:         8.8.8.8
+Address:        8.8.8.8:53
+
+Non-authoritative answer:
+Name:   example.com
+Address: 2606:4700:10::ac42:93f3
+Name:   example.com
+Address: 2606:4700:10::6814:179a
+
+*** Can't find example.com: No answer
+
+INTERNET_OK
+PING 192.168.2.11 (192.168.2.11): 56 data bytes
+
+--- 192.168.2.11 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+AISLAMIENTO_OK
+
+VERIFICANDO VM VLAN 200, actividad 1
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast qlen 1000
+    inet 192.168.2.12/24 brd 192.168.2.255 scope global eth0
+       valid_lft forever preferred_lft forever
+default via 192.168.2.1 dev eth0
+192.168.2.0/24 dev eth0 scope link  src 192.168.2.12
+PING 192.168.2.1 (192.168.2.1): 56 data bytes
+64 bytes from 192.168.2.1: seq=0 ttl=64 time=5.282 ms
+64 bytes from 192.168.2.1: seq=1 ttl=64 time=2.082 ms
+64 bytes from 192.168.2.1: seq=2 ttl=64 time=1.975 ms
+
+--- 192.168.2.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.975/3.113/5.282 ms
+PING 192.168.2.11 (192.168.2.11): 56 data bytes
+64 bytes from 192.168.2.11: seq=0 ttl=64 time=6.497 ms
+64 bytes from 192.168.2.11: seq=1 ttl=64 time=2.150 ms
+64 bytes from 192.168.2.11: seq=2 ttl=64 time=1.627 ms
+
+--- 192.168.2.11 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 1.627/3.424/6.497 ms
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: seq=0 ttl=110 time=39.426 ms
+64 bytes from 8.8.8.8: seq=1 ttl=110 time=38.664 ms
+64 bytes from 8.8.8.8: seq=2 ttl=110 time=37.325 ms
+
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 37.325/38.471/39.426 ms
+Server:         8.8.8.8
+Address:        8.8.8.8:53
+
+Non-authoritative answer:
+Name:   example.com
+Address: 2606:4700:10::ac42:93f3
+Name:   example.com
+Address: 2606:4700:10::6814:179a
+
+*** Can't find example.com: No answer
+
+INTERNET_OK
+PING 192.168.0.11 (192.168.0.11): 56 data bytes
+
+--- 192.168.0.11 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+AISLAMIENTO_OK
+
+VERIFICACION OK server2 actividad 1
+[ofs] verify
+817a75af-8df8-436f-b176-e1751763b130
+    Bridge OFS
+        Port "ens6"
+            Interface "ens6"
+        Port "ens8"
+            Interface "ens8"
+        Port "ens4"
+            Interface "ens4"
+        Port "ens5"
+            Interface "ens5"
+        Port OFS
+            Interface OFS
+                type: internal
+        Port "ens7"
+            Interface "ens7"
+    ovs_version: "2.9.5"
+OFS OK: OFS ; trunks de datos: ens4,ens5,ens6,ens7,ens8
+817a75af-8df8-436f-b176-e1751763b130
+    Bridge OFS
+        Port "ens6"
+            Interface "ens6"
+        Port "ens8"
+            Interface "ens8"
+        Port "ens4"
+            Interface "ens4"
+        Port "ens5"
+            Interface "ens5"
+        Port OFS
+            Interface OFS
+                type: internal
+        Port "ens7"
+            Interface "ens7"
+    ovs_version: "2.9.5"
+VERIFICACION OK ofs actividad 1
+PASS: actividad 1; 4 clientes verificados; DHCP, Internet y DNS, VLAN aisladas.
+Evidencias guardadas en /home/ubuntu/TEL141_L4_20211602-main/DEV/actividad_1/evidencias/20261004T052209Z-6040
