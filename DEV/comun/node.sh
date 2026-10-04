@@ -8,8 +8,9 @@ ROOT=$(cd "$HERE/../.." && pwd)
 IP_SCRIPTS="$ROOT/scripts_IP"
 ACTION=${1:?}; ROLE=${2:?}; RUN_ID=${3:?}
 IMAGE=${4:-alpine:3.22}; TEST_IP=${5:-8.8.8.8}; TEST_DNS=${6:-example.com}
-ACTIVITY_ID=${7:?}; [[ $ACTIVITY_ID =~ ^[123]$ ]] || exit 2
+ACTIVITY_ID=${7:?}; [[ $ACTIVITY_ID =~ ^[1234]$ ]] || exit 2
 STATE=/var/lib/tel141-l4
+source "$HERE/helpers/profile.sh"
 die() { echo "ERROR $ROLE: $*" >&2; exit 1; }
 [[ $(hostname -s) == "$ROLE" ]] || die 'Hostname no coincide con el inventario.'
 (( EUID == 0 )) || die 'Se requiere sudo -n.'
@@ -89,7 +90,7 @@ case "$ACTION" in
         bash "$IP_SCRIPTS/init_master.sh" ens4
         for ID in 100 200; do
           if [[ $ID == 100 ]]; then PREFIX=192.168.0; M=01; else PREFIX=192.168.2; M=02; fi
-          if [[ $ACTIVITY_ID == 2 ]]; then
+          if is_static_vlan "$ID"; then
             bash "$IP_SCRIPTS/create_network_vlan.sh" "$ID" "$PREFIX.0/24" no
           else
             printf 'dhcp-host=02:20:21:16:%s:00,%s.11\ndhcp-host=02:20:21:16:%s:01,%s.12\n' \
@@ -97,12 +98,15 @@ case "$ACTION" in
             TEL141_DHCP_HOSTS_FILE="$HERE/reservas-$ID.conf" bash "$IP_SCRIPTS/create_network_vlan.sh" \
               "$ID" "$PREFIX.0/24" si "$PREFIX.11,$PREFIX.15"
           fi
-          if [[ $ACTIVITY_ID == 3 ]]; then
+          if ! internet_enabled; then
             bash "$IP_SCRIPTS/no_internet_to_network.sh" "$ID" "$PREFIX.0/24"
           else
             EXT_IF=ens3 bash "$IP_SCRIPTS/internet_to_network.sh" "$ID" "$PREFIX.0/24"
           fi
         done
+        if [[ $ACTIVITY_ID == 4 ]]; then
+          bash "$IP_SCRIPTS/routing_networks.sh" 100 200
+        fi
         python3 "$HERE/helpers/firewall.py" apply "$ACTIVITY_ID"
         ;;
       server2)
@@ -129,13 +133,13 @@ case "$ACTION" in
             if docker exec "a${ACTIVITY_ID}-cont$ID" ip -4 addr show dev eth0 | grep -Fq "$ADDR/24"; then READY=1; break; fi
             sleep 2
           done
-          if [[ $ACTIVITY_ID != 2 ]]; then docker exec "a${ACTIVITY_ID}-cont$ID" cat /tmp/dhcp.log; fi
+          if ! is_static_vlan "$ID"; then docker exec "a${ACTIVITY_ID}-cont$ID" cat /tmp/dhcp.log; fi
           (( READY )) || die "Contenedor VLAN $ID sin la direccion esperada."
         done ;;
       server2)
         for ID in 100 200; do
           if [[ $ID == 100 ]]; then PREFIX=192.168.0; else PREFIX=192.168.2; fi
-          if [[ $ACTIVITY_ID == 2 ]]; then
+          if is_static_vlan "$ID"; then
             # Enviar un script corto codificado; el invitado lo ejecuta con sudo.
             PAYLOAD=$(base64 -w 0 "$HERE/helpers/static_guest.sh")
             vm_console "$ID" "command -v base64 >/dev/null || exit 23; printf '%s' '$PAYLOAD' | base64 -d | sudo -n sh -s -- $PREFIX.12 $PREFIX.1" 420
@@ -157,9 +161,9 @@ case "$ACTION" in
         for ID in 100 200; do
           echo "VERIFICANDO CONTENEDOR VLAN $ID, actividad $ACTIVITY_ID"
           docker exec "a${ACTIVITY_ID}-cont$ID" sh -c "$(guest_command "$ID" container)"
-          if [[ $ACTIVITY_ID == 2 ]]; then
+          if is_static_vlan "$ID"; then
             # Prueba temporal: /bin/true evita modificar la IP estatica.
-            docker exec "a2-cont$ID" sh -c '
+            docker exec "a${ACTIVITY_ID}-cont$ID" sh -c '
               udhcpc -f -n -q -t 2 -T 2 -i eth0 -s /bin/true; rc=$?
               if [ "$rc" -eq 0 ]; then echo FALLO_DHCP_RESIDUAL; exit 21; fi
               [ "$rc" -eq 1 ] || exit 22
@@ -180,13 +184,18 @@ case "$ACTION" in
         # Control positivo: el host de gestion sigue teniendo salida real.
         ping -I ens3 -c 3 -W 3 "$TEST_IP" || die 'server3 tampoco alcanza Internet; no se puede validar el escenario.'
         echo INTERNET_HOST_OK
-        if [[ $ACTIVITY_ID == 2 ]]; then
-          python3 "$HERE/helpers/verify_no_dhcp.py"
+        python3 "$HERE/helpers/verify_dhcp_layout.py" "$ACTIVITY_ID"
+        if [[ $ACTIVITY_ID == 4 ]]; then
+          ip -4 route
+          iptables -C FORWARD -i vlan100 -o vlan200 -s 192.168.0.0/24 -d 192.168.2.0/24 \
+            -m comment --comment TEL141-L4-route-100-200 -j ACCEPT
+          iptables -C FORWARD -i vlan200 -o vlan100 -s 192.168.2.0/24 -d 192.168.0.0/24 \
+            -m comment --comment TEL141-L4-route-100-200 -j ACCEPT
         fi
         for ID in 100 200; do
           if [[ $ID == 100 ]]; then NET=192.168.0; M=01; else NET=192.168.2; M=02; fi
           ip -4 addr show "vlan$ID"
-          if [[ $ACTIVITY_ID != 2 ]]; then
+          if ! is_static_vlan "$ID"; then
             ip netns exec "ns-dhcp-$ID" ip -4 addr
             LISTEN=$(ip netns exec "ns-dhcp-$ID" ss -H -lun 'sport = :67')
             [[ -n $LISTEN ]] || die "DHCP VLAN $ID no escucha."
@@ -199,7 +208,7 @@ case "$ACTION" in
                 || die "Falta concesion DHCP $NET.$END."
             done
           fi
-          if [[ $ACTIVITY_ID == 3 ]]; then
+          if ! internet_enabled; then
             [[ ! -f $STATE/internet/$ID ]] || die "Hay permiso NAT registrado para VLAN $ID."
             NAT_RULES=$(iptables -t nat -S POSTROUTING)
             [[ $NAT_RULES != *"$NET.0/24"* ]] || die "NAT residual para $NET.0/24"
@@ -213,6 +222,19 @@ case "$ACTION" in
       ofs) python3 "$HERE/helpers/check_ofs.py" ;;
     esac
     echo "VERIFICACION OK $ROLE actividad $ACTIVITY_ID"
+    ;;
+  routing_evidence)
+    [[ $ROLE == server3 && $ACTIVITY_ID == 4 ]] || die 'Evidencia de rutas solo para server3/A4.'
+    python3 "$HERE/helpers/firewall.py" verify 4
+    COUNTERS=$(iptables -L TEL141_RF -v -n -x)
+    printf '%s\n' "$COUNTERS"
+    for PAIR in 'vlan100 vlan200' 'vlan200 vlan100'; do
+      read -r IN OUT <<< "$PAIR"
+      awk -v incoming="$IN" -v outgoing="$OUT" \
+        '$3=="ACCEPT" && $6==incoming && $7==outgoing && $1>0 {ok=1} END {exit !ok}' <<< "$COUNTERS" \
+        || die "No hay paquetes encaminados de $IN a $OUT."
+    done
+    echo ENRUTAMIENTO_BIDIRECCIONAL_CON_CONTADORES_OK
     ;;
   *) die 'Accion no admitida.' ;;
 esac
