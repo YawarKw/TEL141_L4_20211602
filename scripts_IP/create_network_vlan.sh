@@ -70,7 +70,11 @@ log-facility=$STATE/networks/dnsmasq-$ID.log
 log-dhcp
 user=root
 EOF
+if [[ -n ${TEL141_DHCP_HOSTS_FILE:-} ]]; then
+    [[ -f $TEL141_DHCP_HOSTS_FILE ]] || die 'Archivo de reservas DHCP inexistente.'
+    cat "$TEL141_DHCP_HOSTS_FILE" >> "$CONF"
+fi
 dnsmasq --test --conf-file="$CONF"
 # Cerrar el descriptor de flock en el demonio para no bloquear llamadas posteriores.
-ip netns exec "$NS" dnsmasq --conf-file="$CONF" 9>&-
+ip netns exec "$NS" dnsmasq --conf-file="$CONF" 9>&- 8>&-
 printf 'VLAN %s: gateway %s; DHCP %s en %s; rango %s.\n' "$ID" "$GW" "$DHCPIP" "$NS" "$RANGE"
