@@ -2,9 +2,10 @@
 set -euo pipefail
 (( $# == 3 )) || { echo 'Uso: create_container.sh VLAN IMAGEN ACTIVIDAD' >&2; exit 1; }
 ID=$1; IMAGE=$2; ACTIVITY_ID=$3
-[[ $ACTIVITY_ID =~ ^[123]$ ]] || exit 1
+[[ $ACTIVITY_ID =~ ^[1234]$ ]] || exit 1
 [[ $ID == 100 || $ID == 200 ]] || exit 1
 HERE=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+source "$HERE/profile.sh"
 NAME="a${ACTIVITY_ID}-cont$ID"; VH="a${ACTIVITY_ID}c${ID}h"; VN="a${ACTIVITY_ID}c${ID}n"
 if [[ $ID == 100 ]]; then MAC=02:20:21:16:01:00; else MAC=02:20:21:16:02:00; fi
 docker run -d --name "$NAME" --hostname "$NAME" --network none \
@@ -18,7 +19,7 @@ nsenter -t "$PID" -n ip link set eth0 address "$MAC"
 nsenter -t "$PID" -n ip link set eth0 up
 ovs-vsctl add-port br-int "$VH" -- set Port "$VH" tag="$ID" vlan_mode=access
 ip link set "$VH" up
-if [[ $ACTIVITY_ID == 2 ]]; then
+if is_static_vlan "$ID"; then
   if [[ $ID == 100 ]]; then PREFIX=192.168.0; else PREFIX=192.168.2; fi
   docker exec "$NAME" ip addr add "$PREFIX.11/24" dev eth0
   docker exec "$NAME" ip route replace default via "$PREFIX.1" dev eth0
