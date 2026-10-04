@@ -77,8 +77,163 @@ Configuración de acceso y dependencias :
 
 ```bash
 bash DEV/comun/configurar_ssh.sh
+```
+## Preparar sudo sin contraseña para la automatización
+
+Los scripts se ejecutan desde **server4 como usuario `ubuntu`, sin anteponer `sudo`**. Para administrar remotamente los equipos sin interacción, `ubuntu` debe poder ejecutar `sudo` sin contraseña en **server1, server2, server3 y OFS**.
+
+La regla siguiente concede administración completa sin contraseña. Se utiliza en los equipos del laboratorio.
+
+### Server1 — 10.0.10.1
+
+Desde server4:
+
+```bash
+ssh ubuntu@10.0.10.1
+```
+
+Dentro de server1:
+
+```bash
+sudo visudo -f /etc/sudoers.d/90-tel141-ubuntu
+```
+
+Agregar esta línea y guardar:
+
+```text
+ubuntu ALL=(ALL:ALL) NOPASSWD: ALL
+```
+
+Comprobar y regresar a server4:
+
+```bash
+sudo chmod 0440 /etc/sudoers.d/90-tel141-ubuntu
+sudo -k
+sudo -n true && echo "server1: sudo sin contraseña OK"
+exit
+```
+
+### Server2 — 10.0.10.2
+
+Desde server4:
+
+```bash
+ssh ubuntu@10.0.10.2
+```
+
+Dentro de server2:
+
+```bash
+sudo visudo -f /etc/sudoers.d/90-tel141-ubuntu
+```
+
+Agregar esta línea y guardar:
+
+```text
+ubuntu ALL=(ALL:ALL) NOPASSWD: ALL
+```
+
+Comprobar y regresar a server4:
+
+```bash
+sudo chmod 0440 /etc/sudoers.d/90-tel141-ubuntu
+sudo -k
+sudo -n true && echo "server2: sudo sin contraseña OK"
+exit
+```
+
+### Server3 — 10.0.10.3
+
+Desde server4:
+
+```bash
+ssh ubuntu@10.0.10.3
+```
+
+Dentro de server3:
+
+```bash
+sudo visudo -f /etc/sudoers.d/90-tel141-ubuntu
+```
+
+Agregar esta línea y guardar:
+
+```text
+ubuntu ALL=(ALL:ALL) NOPASSWD: ALL
+```
+
+Comprobar y regresar a server4:
+
+```bash
+sudo chmod 0440 /etc/sudoers.d/90-tel141-ubuntu
+sudo -k
+sudo -n true && echo "server3: sudo sin contraseña OK"
+exit
+```
+
+### OFS — 10.0.10.5
+
+Desde server4:
+
+```bash
+ssh ubuntu@10.0.10.5
+```
+
+Dentro de OFS:
+
+```bash
+sudo visudo -f /etc/sudoers.d/90-tel141-ubuntu
+```
+
+Agregar esta línea y guardar:
+
+```text
+ubuntu ALL=(ALL:ALL) NOPASSWD: ALL
+```
+
+Comprobar y regresar a server4:
+
+```bash
+sudo chmod 0440 /etc/sudoers.d/90-tel141-ubuntu
+sudo -k
+sudo -n true && echo "OFS: sudo sin contraseña OK"
+exit
+```
+
+> Las conexiones SSH y la primera ejecución de `sudo visudo` pueden solicitar contraseña. Si el editor es Nano, guardar con **Ctrl+O**, pulsar **Enter** y salir con **Ctrl+X**. La comprobación `sudo -n true` debe terminar correctamente sin solicitar contraseña.
+
+### Server4 — configuración SSH y continuación
+
+En server4 no se necesita agregar esta regla para ejecutar el orquestador. Desde la raíz del repositorio, ejecutar como `ubuntu`:
+
+```bash
+bash DEV/comun/configurar_ssh.sh
+```
+
+El script reutiliza la clave existente e instala su clave pública en los destinos pendientes. Debe finalizar con:
+
+```text
+SSH desde server4 y sudo sin interaccion: OK.
+```
+
+Después, instalar las dependencias compartidas:
+
+```bash
 bash DEV/actividad_4/actividad4.sh deps
 ```
+
+Este comando prepara los servidores; no despliega la actividad 4. Una vez completado correctamente, iniciar la comprobación de la actividad 1:
+
+```bash
+bash DEV/actividad_1/actividad1.sh plan
+```
+### Server4 — configuración de dependencias comunes
+
+```bash
+bash DEV/comun/configurar_ssh.sh
+bash DEV/actividad_4/actividad4.sh deps
+```
+
 Cabe resaltar que actividad4.sh deps solo instala las dependencias compartidas para las 4 actividades; no despliega la actividad 4.
 
 
